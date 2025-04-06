@@ -2,33 +2,35 @@ package com.example.crapsgame.models;
 
 public class Game {
 
-    private int lastRoll;        // Última suma de los dados
-    private int point;           // Valor del "punto" (4, 5, 6, 8, 9 o 10)
-    private boolean firstRoll;   // Indica si es el primer tiro de la ronda
-    private boolean gameOver;    // Indica si la ronda terminó (ganar o perder)
+    private int lastRoll;    // Última suma de los dados
+    private int punto;       // Valor del "punto" (4, 5, 6, 8, 9 o 10)
+    private boolean firstRoll; // Indica si es el primer tiro de la ronda
+    private boolean gameOver;  // Indica si la ronda terminó (ganar o perder)
 
-    private int wins;            // Conteo de partidas ganadas
-    private int losses;          // Conteo de partidas perdidas
+    private int ganado;      // Conteo de partidas ganadas
+    private int perdido;     // Conteo de partidas perdidas
 
     public Game() {
         resetGame();
     }
 
     /**
-     * Reinicia la ronda actual, pero conserva las victorias/derrotas totales.
+     * Reinicia la ronda actual, pero conserva los valores de
+     * partidas ganadas/perdidas acumuladas.
      */
     public void resetGame() {
         lastRoll = 0;
-        point = 0;
+        punto = 0;
         firstRoll = true;
         gameOver = false;
+        // Se mantienen 'ganado' y 'perdido' para llevar la cuenta total.
     }
 
     /**
-     * Este método recibe la suma de los dos dados
-     * y actualiza la lógica del juego (ganar, perder, establecer punto).
+     * Recibe la suma de los dos dados y actualiza la lógica de Craps
+     * (ganar, perder, establecer punto, etc.).
      */
-    public void evaluateRoll(int sum) {
+    public void playRound(int sum) {
         lastRoll = sum;
 
         if (firstRoll) {
@@ -37,20 +39,20 @@ public class Game {
                 case 7:
                 case 11:
                     // Gana automáticamente
-                    wins++;
+                    ganado++;
                     gameOver = true;
                     break;
                 case 2:
                 case 3:
                 case 12:
                     // Pierde automáticamente
-                    losses++;
+                    perdido++;
                     gameOver = true;
                     break;
                 default:
                     // Si no es 2,3,7,11,12 => 4,5,6,8,9,10 (punto)
-                    point = sum;
-                    // El juego continúa, no se marca gameOver
+                    punto = sum;
+                    // Continúa el juego
                     break;
             }
             firstRoll = false;
@@ -58,37 +60,29 @@ public class Game {
             // TIROS POSTERIORES
             if (sum == 7) {
                 // Pierde la ronda
-                losses++;
+                perdido++;
                 gameOver = true;
-            } else if (sum == point) {
+            } else if (sum == punto) {
                 // Gana la ronda
-                wins++;
+                ganado++;
                 gameOver = true;
             }
-            // Si no salió ni 7 ni el punto, el juego sigue en marcha
+            // Si no salió ni 7 ni el punto, el juego sigue.
         }
     }
 
-    // GETTERS para que tu controlador muestre la información
+    // GETTERS
 
     public int getLastRoll() {
         return lastRoll;
     }
 
-    public int getPoint() {
-        return point;
+    public int getPunto() {
+        return punto;
     }
 
-    public boolean isGameOver() {
-        return gameOver;
+    public int getGanado() {
+        return ganado;
     }
 
-    public int getWins() {
-        return wins;
-    }
-
-    public int getLosses() {
-        return losses;
-    }
-}
-
+    public int getPer
